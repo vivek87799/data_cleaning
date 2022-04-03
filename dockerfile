@@ -1,4 +1,4 @@
-FROM alpine:3.14
+FROM python:3.7-alpine
 
 RUN apk update && apk upgrade
 RUN apk --no-cache add curl
@@ -16,6 +16,8 @@ RUN pip3 install --no-cache --upgrade pip setuptools
 
 COPY . /home/workdir/
 COPY tmx-file.tmx /home/workdir/
+RUN pip3 install -r /home/workdir/requirements.txt
+# RUN pip3 install -r /home/workdir/requirements.txt
 # CMD ["/home/workdir/data_cleaning.py"]
 
 
