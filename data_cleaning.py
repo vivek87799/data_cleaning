@@ -21,6 +21,14 @@ import faust
 from typing import List
 from config import Field, Parameters
 
+import logging 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s:%(name)s:%(levelname)s:%(message)s')
+file_handler = logging.FileHandler('data_cleaning.log')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
 # Models describe how messages are serialized:
 # {"account_id": "3fae-...", amount": 3}
 """
@@ -70,7 +78,7 @@ class DataPersist:
     
     @classmethod
     def run_manager(cls, data: TMXData):
-        return self.loop.run_until_complete(self.__async__dat_persist(data))
+        return cls.loop.run_until_complete(cls.__async__dat_persist(data))
 
 
 loop = asyncio.get_event_loop()
@@ -96,11 +104,11 @@ tasks = []
 async def clean_data(raw_data: str):
     async for data in raw_data:
         if data.src is not None and data.target is not None:
-            print(f'Before: {data.src}')
+            logger.info(f'Before: {data.src}')
             # TODO run src and target data in two separate threads
             DataCleaning.run_manager(data, Parameters.PATTERNS)
             tasks.append(asyncio.create_task(data_persist(data)))
-            print(f'After: {data.src}')
+            logger.info(f'After: {data.src}')
             
 
 if __name__ == '__main__':
