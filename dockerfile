@@ -15,7 +15,7 @@ RUN python3 -m ensurepip
 RUN pip3 install --no-cache --upgrade pip setuptools
 
 COPY . /home/workdir/
-COPY tmx-file.tmx /home/workdir/
+# COPY tmx-file.tmx /home/workdir/
 RUN pip3 install -r /home/workdir/requirements.txt
 # RUN pip3 install -r /home/workdir/requirements.txt
 # CMD ["/home/workdir/data_cleaning.py"]
